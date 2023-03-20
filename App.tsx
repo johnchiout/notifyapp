@@ -9,9 +9,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const baseUrl = 'https://ccmde1.cloudon.gr/notifyApp';
 
 
-
-
-
 function App(): JSX.Element {
   const [state, setState] = useState({
     token: ''
