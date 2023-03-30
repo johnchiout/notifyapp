@@ -39,10 +39,10 @@ const NavStyle = ({navigation, title}) => {
 
   return (
     <Box bg={"primary.700"} w={'100%'} p={'15px'} flexDirection="row" alignItems={'center'} justifyContent={'space-between'}>
-        <Text color={'white'}>{title}</Text>
+        <Text color={'light.50'}>{title}</Text>
         <Flex align="flex-end" direction="row" >
         <IconButton style={styles.toggleMode} onPress={toggleColorMode} icon={colorMode === "light" ? <MoonIcon size="sm" color="primary.900"/> : <SunIcon size="sm"color="yellow.600"/>}/>
-        <IconButton style={styles.toggleMode}  icon={<MaterialIcons name="logout-variant" size={16} />}/>
+        {/* <IconButton style={styles.toggleMode}  icon={<MaterialIcons name="logout-variant"  />}/> */}
         </Flex>
     </Box>
     

@@ -48,11 +48,11 @@ const HomePage = ({route}) => {
 
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('Message handled in the background!', remoteMessage);
-      console.log(remoteMessage.notification)
       setMessage(remoteMessage)
     });
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
     messaging().onNotificationOpenedApp(remoteMessage => {
+      setMessage(remoteMessage)
       console.log(
         'Notification caused app to open from background state:',
         remoteMessage.notification,
@@ -63,7 +63,7 @@ const HomePage = ({route}) => {
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
-        console.log(remoteMessage)
+        setMessage(remoteMessage)
         if (remoteMessage) {
           console.log(
             'Notification caused app to open from quit state:',
@@ -116,7 +116,7 @@ const MessageBox = ({message, title}) => {
     <Box w="100%">
       <Text mt="10px" fontSize={'lg'}> {title}</Text>
       <Box w={'20px'} mb={'5px'} mt={'2px'} h={'3px'} bg={colorMode === 'dark' ? 'primary.400' : 'primary.400'}></Box>
-      <Box w="100%"  bg={'warmGrey.200'}>
+      <Box w="100%"  bg={'warmGrey.100'}>
         <Text>
           {message}
         </Text>
