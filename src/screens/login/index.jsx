@@ -9,15 +9,14 @@ import { useNavigation } from '@react-navigation/native';
 const LoginScreen = () => {
   const [username, setUsername] = useState('john');
   const [password, setPassword] = useState('1234');
-  const [company, setCompany] = useState('');
+  const [company, setCompany] = useState('CCM');
   const navigation = useNavigation();
 
-  const handleUsername = text => setUsername(text)
-  const handlePassword = text => setPassword(text)
-  const handleCompany = text => setCompany(text)
+  const handleUsername = text => setUsername(text);
+  const handlePassword = text => setPassword(text);
+  const handleCompany = text => setCompany(text);
 
   const handleLogin = async () => {
-    
     await axios.post(`${baseURL}/notifyLogin.php`, {
       username: username,
       password: password,
@@ -40,13 +39,11 @@ const LoginScreen = () => {
         label="Company"
         onChange={handleCompany}
         value={company}
-        
       />
       <InputRow 
         label="Username"
         onChange={handleUsername}
         value={username}
-        
       />
       <InputRow 
         onChange={handlePassword}
@@ -80,7 +77,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-    
   },
 });
 

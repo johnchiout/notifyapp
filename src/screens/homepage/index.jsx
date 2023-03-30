@@ -14,7 +14,7 @@ const HomePage = ({route}) => {
   });
   
   const registerToken = async (token) => {
-    console.log("TOKEN " + token)
+    // console.log("TOKEN " + token)
     await axios.post(`${baseURL}/notifyRegisterToken.php`, {
       userid: userid,
       token: token
@@ -32,12 +32,14 @@ const HomePage = ({route}) => {
     // Register the device with FCM
     await messaging().registerDeviceForRemoteMessages();
     const token = await messaging().getToken();
-    console.log(token)
+    // console.log(token)
     registerToken(token)
   }
 
 
   useEffect(() => {
+    
+
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('Message handled in the background!', remoteMessage);
     });
@@ -63,14 +65,14 @@ const HomePage = ({route}) => {
         }
       });
       onAppBootstrap()
+
+      const unsubscribe = messaging().onMessage(async remoteMessage => {
+        Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      });
+      return unsubscribe;
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
-    return unsubscribe;
-  }, []);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <Text>HomePage</Text>
