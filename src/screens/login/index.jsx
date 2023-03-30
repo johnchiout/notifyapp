@@ -1,31 +1,57 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { InputRow, Button } from '../../components/index';
+import React, { useState, useEffect } from 'react';
+import { InputRow, InputBase, BoxLayout, InputPassword, CustomAlert, InputControl } from '../../components/index';
 import axios from 'axios';
 import baseURL from '../../config/config';
 import { useNavigation } from '@react-navigation/native';
+import { Button, useColorMode, useColorModeValue, Box, Text, Container, VStack, Toast} from "native-base";
+import { useToast } from 'native-base';
+
+
+
 
 
 const LoginScreen = () => {
-  const [username, setUsername] = useState('john');
-  const [password, setPassword] = useState('1234');
-  const [company, setCompany] = useState('CCM');
-  const navigation = useNavigation();
 
-  const handleUsername = text => setUsername(text);
-  const handlePassword = text => setPassword(text);
-  const handleCompany = text => setCompany(text);
+
+  const [state, setState] = useState({
+    username: 'giannis',
+    password: '1234',
+    company: 'CCM',
+    isLoading: false,
+    isDisabled: false,
+  })
+
+  const [isClose, setIsClose] = useState(true)
+  const navigation = useNavigation();
+  const handleUsername = text =>setState(prev => ({...prev, username: text}))
+  const handlePassword = text =>setState(prev => ({...prev, password: text}))
+  const handleCompany = text =>setState(prev => ({...prev, company: text}))
+   
+  useEffect(() => {
+    if(state.username === "" || state.password === "" || state.company === "" ) {
+      setState(prev => ({...prev, isDisabled: true}))
+    }
+  }, [state.username, state.password, state.company])
 
   const handleLogin = async () => {
+    setState(prev => ({ ...prev, isLoading: true}));
+    
+
     await axios.post(`${baseURL}/notifyLogin.php`, {
-      username: username,
-      password: password,
-      company: company
+      username: state.username,
+      password: state.password,
+      company: state.company
     }).then((response) => {
-      console.log('response')
-      console.log(response.data);
+    
       if(response.data.status == 'OK') {
+        setState(prev => ({...prev, isLoading: false}))
         navigation.navigate('HomePage', {userid: response.data.res.userid })
+          
+      }
+      console.log(response.data);
+      if(response.data.status == 'NOT OK') {
+        setState(prev => ({...prev, isLoading: false}))
+        setIsClose(false)
       }
     });
 
@@ -34,50 +60,46 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <InputRow 
-        label="Company"
-        onChange={handleCompany}
-        value={company}
-      />
-      <InputRow 
-        label="Username"
-        onChange={handleUsername}
-        value={username}
-      />
-      <InputRow 
-        onChange={handlePassword}
-        value={password}
-        label="Password"
-      />
-      <Button onPress={handleLogin} />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-    </View>
+      <BoxLayout>
+          {!isClose && <CustomAlert status={'error'} text={'Wrong credentials, please try again'} setIsClose={setIsClose}/>}
+          <InputBase 
+          label="Company"
+          onChange={handleCompany}
+          value={state.company}
+          />
+          <InputBase 
+          label="Username"
+          onChange={handleUsername}
+          value={state.username}
+          />
+      
+          <InputBase 
+          label="Password"
+          onChange={handlePassword}
+          value={state.password}
+          />
+        
+          <Button
+            w="100%"
+            size={'lg'}
+            m={'10px 0px'}
+            onPress={handleLogin}
+            isLoading={state.isLoading}
+            isDisabled={state.isDisabled}
+          >
+            Login
+          </Button>
+       
+        {/* <Button w="100%" onPress={toggleColorMode}  fontSize="lg">
+            Toggle
+        </Button>
+        <Text>Color</Text> */}
+      </BoxLayout>
+      
+      // </Box>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-  },
 
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 12,
-    borderRadius: 3,
-    width: '100%'
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
 
 export default LoginScreen;
