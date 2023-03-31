@@ -26,6 +26,7 @@ function App() {
     
   );
 }
+
 AppRegistry.registerComponent('app', () => HeadlessCheck);
 
 export default App;

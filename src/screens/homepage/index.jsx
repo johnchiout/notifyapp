@@ -5,10 +5,15 @@ import messaging from '@react-native-firebase/messaging';
 import baseURL from '../../config/config';
 import { useRoute } from '@react-navigation/native';
 import { BoxLayout } from '../../components';
+import useAsyncStorage from '../../utils/storeAsync';
 //NATIVE BASSE
 import { Box, Text, Input, useColorModeValue, colorMode, } from 'native-base';
 import converTime from '../../utils/converTime';
 import AntDesign from  'react-native-vector-icons/AntDesign'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
 
 const HomePage = ({route}) => {
   const { userid } = route.params;
@@ -17,8 +22,12 @@ const HomePage = ({route}) => {
   const bg = useColorModeValue("warmGray.100", "coolGray.800");
   const bgCard = useColorModeValue("white", "primary.600");
   const bgCardBorderColor =  useColorModeValue("primary.500", "primary.300");
-  
-  
+  const [value, saveData, clearMyData] = useAsyncStorage('@message', 'initial value');
+
+
+
+
+
   const registerToken = async (token) => {
     // console.log("TOKEN " + token)
     await axios.post(`${baseURL}/notifyRegisterToken.php`, {
@@ -26,7 +35,6 @@ const HomePage = ({route}) => {
       token: token
     }).then((response) => {
       
-      console.log(response.data);
     });
   }
   
@@ -45,42 +53,46 @@ const HomePage = ({route}) => {
 
   useEffect(() => {
     
-
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('Message handled in the background!', remoteMessage);
-      setMessage(remoteMessage)
+      if(remoteMessage) {
+        setMessage(remoteMessage)
+        saveData(remoteMessage)
+      }
+      
     });
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
     messaging().onNotificationOpenedApp(remoteMessage => {
-      setMessage(remoteMessage)
-      console.log(
-        'Notification caused app to open from background state:',
-        remoteMessage.notification,
-      );
+      if(remoteMessage) {
+        setMessage(remoteMessage)
+        saveData(remoteMessage)
+      }
+      // console.log('Notification caused app to open from background state:',remoteMessage.notification);
     });
 
     // Check whether an initial notification is available
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
-        setMessage(remoteMessage)
+      
         if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.notification,
-          );
+          saveData(remoteMessage)
+          setMessage(remoteMessage)
+          // console.log(
+          //   'Notification caused app to open from quit state:',
+          //   remoteMessage.notification,
+          // );
         }
       });
       onAppBootstrap()
 
       const unsubscribe = messaging().onMessage(async remoteMessage => {
         // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-        console.log(remoteMessage)
-        console.log(remoteMessage.data)
-        console.log(remoteMessage.sentTime)
-
-        converTime(remoteMessage.sentTime)
-        setMessage(remoteMessage)
+        if(remoteMessage) {
+          saveData(remoteMessage)
+          setMessage(remoteMessage)
+        }
+      
       });
       return unsubscribe;
   }, []);
@@ -91,20 +103,19 @@ const HomePage = ({route}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Box p="10px" bg={bg} flex={1}>
-        {message && (
           <Box style={styles.cardBox} borderColor={bgCardBorderColor} bg={bgCard}  >
-          <MessageBox message={message?.notification?.title} title={'Title:'}/>
-          <MessageBox message={message?.notification?.body} title={'Body:'}/>
-          <MessageBox message={message?.data?.inAppMessage} title={'Data:'}/>
+          <MessageBox message={value?.notification?.title} title={'Title:'}/>
+          <MessageBox message={value?.notification?.body} title={'Body:'}/>
+          <MessageBox message={value?.data?.inAppMessage} title={'Data:'}/>
           <Box bg={"primary.400"} w="25%" style={styles.timeStamp} >
             <AntDesign name="clockcircleo" />
-            <Text>{message && converTime(message?.sentTime) }</Text>
+            <Text>{value && converTime(value?.sentTime) }</Text>
           </Box>
           <Box>
           </Box>
         </Box>
-        )}
       </Box>
+    
     </SafeAreaView>
   );
 }
