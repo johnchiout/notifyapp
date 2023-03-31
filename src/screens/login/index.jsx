@@ -42,6 +42,11 @@ const LoginScreen = () => {
     if(state.username === "" || state.password === "" || state.company === "" ) {
       setState(prev => ({...prev, isDisabled: true}))
     }
+    if(state.username && state.password && state.company ) {
+      setState(prev => ({...prev, isDisabled: false}))
+    }
+
+    
   }, [state.username, state.password, state.company])
 
   const handleLogin = async () => {
