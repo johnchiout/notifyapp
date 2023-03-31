@@ -5,30 +5,62 @@ import { Text, Box, useColorModeValue, Button, toggleColorMode, useColorMode, Ic
 import LoginScreen from '../screens/login';
 import HomePage from '../screens/homepage';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import useAsyncStorage from '../utils/storeAsync';
+
+
 
 const Stack = createStackNavigator();
 
 
-const StackNav = () => {
+export const StackNav = () => {
+
+  const [value, saveData, clearMyData] = useAsyncStorage('@isLogged', false);
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Login" component={LoginScreen}  
-      options={{
-         header: ({ navigation }) => (
-          <NavStyle navigation={navigation} title="Login"/>
-          ),
-      }}
-      />
-      <Stack.Screen name="HomePage" component={HomePage}
+       <Stack.Screen name="Login" component={LoginScreen}  
         options={{
-          header: ({ navigation }) => (
-           <NavStyle navigation={navigation} title="Αρχική"/>
-           ),
-       }}
-      />
+           header: ({ navigation }) => (
+            <NavStyle navigation={navigation}  clearData={clearMyData} saveData={saveData} title="Login"/>
+            ),
+        }}
+        />
+          <Stack.Screen name="HomePage" component={HomePage}
+          options={{
+            header: ({ navigation }) => (
+             <NavStyle navigation={navigation} clearData={clearMyData} saveData={saveData} title="Αρχική"/>
+             ),
+         }}
+        />
+       
     </Stack.Navigator>
   );
 }
+
+export const MainStack = () => {
+
+  const [value, saveData, clearMyData] = useAsyncStorage('@isLogged', false);
+  return (
+    <Stack.Navigator>
+       
+          <Stack.Screen name="HomePage" component={HomePage}
+          options={{
+            header: ({ navigation }) => (
+             <NavStyle navigation={navigation} clearData={clearMyData} saveData={saveData} title="Αρχική"/>
+             ),
+         }}
+        />
+          <Stack.Screen name="Login" component={LoginScreen}  
+        options={{
+           header: ({ navigation }) => (
+            <NavStyle navigation={navigation}  clearData={clearMyData} saveData={saveData} title="Login"/>
+            ),
+        }}
+        />       
+    </Stack.Navigator>
+  );
+}
+
+
 
 
 const NavStyle = ({navigation, title}) => {
@@ -36,14 +68,23 @@ const NavStyle = ({navigation, title}) => {
     colorMode,
     toggleColorMode
   } = useColorMode();
+  const [value, saveData, clearData] = useAsyncStorage('@isLogged', false);
 
+
+  const logout =  async () => {
+    saveData(JSON.stringify(false))
+    clearData()
+    navigation.navigate('Login')
+  }
   return (
     <Box bg={"primary.700"} w={'100%'} p={'15px'} flexDirection="row" alignItems={'center'} justifyContent={'space-between'}>
         <Text color={'light.50'}>{title}</Text>
         <Flex align="flex-end" direction="row" >
         <IconButton style={styles.toggleMode} onPress={toggleColorMode} icon={colorMode === "light" ? <MoonIcon size="sm" color="primary.900"/> : <SunIcon size="sm"color="yellow.600"/>}/>
+        <IconButton  onPress={logout} icon={<MoonIcon size="sm" color="primary.900"/>}/>
         {/* <IconButton style={styles.toggleMode}  icon={<MaterialIcons name="logout-variant"  />}/> */}
         </Flex>
+        
     </Box>
     
   )
@@ -58,4 +99,3 @@ const styles = StyleSheet.create({
       marginRight: 4,
     }
 });
-export default StackNav;

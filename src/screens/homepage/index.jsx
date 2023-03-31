@@ -3,33 +3,44 @@ import { SafeAreaView, Alert, StyleSheet} from "react-native";
 import { useEffect, useState } from "react";
 import messaging from '@react-native-firebase/messaging';
 import baseURL from '../../config/config';
-import { useRoute } from '@react-navigation/native';
-import { BoxLayout } from '../../components';
 import useAsyncStorage from '../../utils/storeAsync';
 //NATIVE BASSE
 import { Box, Text, Input, useColorModeValue, colorMode, } from 'native-base';
 import converTime from '../../utils/converTime';
 import AntDesign from  'react-native-vector-icons/AntDesign'
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
+const getData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem(key)
+    if(value !== null) {
+      // value previously stored
+    }
+  } catch(e) {
+    // error reading value
+  }
+}
+
 
 const HomePage = ({route}) => {
-  const { userid } = route.params;
+  // const { userid } = route.params;
+
   const [message, setMessage ] = useState('')
   // const bg = useColorModeValue("warmGray.50", "coolGray.800");
   const bg = useColorModeValue("warmGray.100", "coolGray.800");
   const bgCard = useColorModeValue("white", "primary.600");
   const bgCardBorderColor =  useColorModeValue("primary.500", "primary.300");
-  const [value, saveData, clearMyData] = useAsyncStorage('@message', 'initial value');
+  const [value, saveData, clearData] = useAsyncStorage('@message', 'initial value');
 
 
-
-
+ 
 
   const registerToken = async (token) => {
     // console.log("TOKEN " + token)
+    const userid = getData('@userID')
     await axios.post(`${baseURL}/notifyRegisterToken.php`, {
       userid: userid,
       token: token
@@ -38,8 +49,6 @@ const HomePage = ({route}) => {
     });
   }
   
-
- 
 
 
   async function onAppBootstrap() {
@@ -109,7 +118,7 @@ const HomePage = ({route}) => {
           <MessageBox message={value?.data?.inAppMessage} title={'Data:'}/>
           <Box bg={"primary.400"} w="25%" style={styles.timeStamp} >
             <AntDesign name="clockcircleo" />
-            <Text>{value && converTime(value?.sentTime) }</Text>
+            {/* <Text>{value && converTime(value?.sentTime) }</Text> */}
           </Box>
           <Box>
           </Box>

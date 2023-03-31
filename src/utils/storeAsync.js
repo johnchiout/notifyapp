@@ -19,6 +19,9 @@ const useAsyncStorage = (key, initialValue) => {
     loadData();
   }, [key]);
 
+
+
+
   const saveData = async (newValue) => {
     try {
       setValue(newValue);
