@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, Box, useColorModeValue, Button, toggleColorMode, useColorMode, IconButton, SunIcon, MoonIcon, Flex,} from 'native-base';
+import { Text, Box, useColorModeValue, Button, toggleColorMode, useColorMode, IconButton, SunIcon, MoonIcon, Flex, Icon} from 'native-base';
 import LoginScreen from '../screens/login';
 import HomePage from '../screens/homepage';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -81,8 +81,7 @@ const NavStyle = ({navigation, title}) => {
         <Text color={'light.50'}>{title}</Text>
         <Flex align="flex-end" direction="row" >
         <IconButton style={styles.toggleMode} onPress={toggleColorMode} icon={colorMode === "light" ? <MoonIcon size="sm" color="primary.900"/> : <SunIcon size="sm"color="yellow.600"/>}/>
-        <IconButton  onPress={logout} icon={<MoonIcon size="sm" color="primary.900"/>}/>
-        {/* <IconButton style={styles.toggleMode}  icon={<MaterialIcons name="logout-variant"  />}/> */}
+        <IconButton style={styles.toggleMode}  onPress={logout} icon={<Icon as={MaterialIcons} name="logout-variant" size={15}/>}/>
         </Flex>
         
     </Box>
@@ -93,7 +92,6 @@ const NavStyle = ({navigation, title}) => {
 const styles = StyleSheet.create({
     toggleMode: {
       backgroundColor: 'white',
-      borderColor: 'primary.600',
       elevation: 5,
       borderRadius: 30,
       marginRight: 4,

@@ -25,9 +25,9 @@ const LoginScreen = () => {
   const [value, saveData, clearMyData] = useAsyncStorage('@isLogged', 'initial value');
 
   const [state, setState] = useState({
-    username: 'giannis',
-    password: '1234',
-    company: 'CCM',
+    username: '',
+    password: '',
+    company: '',
     isLoading: false,
     isDisabled: false,
   })
