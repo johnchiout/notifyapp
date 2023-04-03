@@ -13,20 +13,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-const getData = async (key) => {
-  try {
-    const value = await AsyncStorage.getItem(key)
-    if(value !== null) {
-      // value previously stored
-    }
-  } catch(e) {
-    // error reading value
-  }
-}
+
 
 
 const HomePage = ({route}) => {
   // const { userid } = route.params;
+  const getData = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem(key)
+      let numValue =  JSON.parse(value)
+      return numValue;
+       
+    } catch(e) {
+      // error reading value
+    }
+  }
 
   const [message, setMessage ] = useState('')
   // const bg = useColorModeValue("warmGray.50", "coolGray.800");
@@ -40,9 +41,11 @@ const HomePage = ({route}) => {
 
   const registerToken = async (token) => {
     // console.log("TOKEN " + token)
-    const userid = getData('@userID')
+    let userid = getData('@userID')
+    console.log(userid)
+   
     await axios.post(`${baseURL}/notifyRegisterToken.php`, {
-      userid: userid,
+      userid:  userid ,
       token: token
     }).then((response) => {
       

@@ -8,6 +8,7 @@ import {StackNav} from './src/nav/stack';
 import { AuthStack, MainStack } from './src/nav/stack';
 import useAsyncStorage from './src/utils/storeAsync';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SplashScreen from 'react-native-splash-screen'
 
 
 const colorModeManager = {
@@ -35,18 +36,18 @@ function HeadlessCheck({isHeadless}) {
     // App has been launched in the background by iOS, ignore
     return null;
   }
+  use
   return <App />;
 }
 
 
 function App() {
   const [islogged, setIslogged] = useState(false)
-  console.log('islogged value: ' + islogged)
+
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('@isLogged')
       if(value !== null) {
-        console.log('Login value: ' + value)
        setIslogged(JSON.parse(value))
       }
     } catch(e) {
@@ -55,17 +56,20 @@ function App() {
   }
 
 
-
   useEffect(() => {
     getData()
+     //hides the splash screen on app load.
   }, [])
+  useEffect(() => {
+    SplashScreen.hide();
+     //hides the splash screen on app load.
+  }, [islogged])
 
   return (
     <NativeBaseProvider colorModeManager={colorModeManager}>
       <SafeAreaView style={{flex: 1}}>
         <NavigationContainer>
           {!islogged  ? <StackNav /> : <MainStack />}
-          {/* {value ? <MainStack/> : <AuthStack />} */}
         </NavigationContainer>
       </SafeAreaView>
     </NativeBaseProvider>

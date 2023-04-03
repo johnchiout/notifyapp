@@ -4,7 +4,6 @@ import axios from 'axios';
 import baseURL from '../../config/config';
 import { useNavigation } from '@react-navigation/native';
 import { Button, useColorMode, useColorModeValue, Box, Text, Container, VStack, Toast} from "native-base";
-import { useToast } from 'native-base';
 import useAsyncStorage from '../../utils/storeAsync';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -25,9 +24,9 @@ const LoginScreen = () => {
   const [value, saveData, clearMyData] = useAsyncStorage('@isLogged', 'initial value');
 
   const [state, setState] = useState({
-    username: '',
-    password: '',
-    company: '',
+    username: 'giannis',
+    password: '1234',
+    company: 'CCM',
     isLoading: false,
     isDisabled: false,
   })
@@ -57,8 +56,10 @@ const LoginScreen = () => {
       username: state.username,
       password: state.password,
       company: state.company
-    }).then((response) => {
-    
+    }
+    ).then((response) => {
+      console.log(response.data)
+      console.log(response)
       if(response.data.status == 'OK') {
       
         setState(prev => ({...prev, isLoading: false}))
@@ -67,12 +68,15 @@ const LoginScreen = () => {
         navigation.navigate('HomePage', {userid: response.data.res.userid })
           
       }
-      console.log(response.data);
       if(response.data.status == 'NOT OK') {
 
         setState(prev => ({...prev, isLoading: false}))
         setIsClose(false)
       }
+    }).catch((error) => {
+      
+        setState(prev => ({...prev, isLoading: false}))
+      console.log(error)
     });
 
 
