@@ -38,12 +38,12 @@ const LoginScreen = () => {
   const handleCompany = text =>setState(prev => ({...prev, company: text}))
    
   useEffect(() => {
-    if(state.username === "" || state.password === "" || state.company === "" ) {
+    if(state.username === "" && state.password === ""  && state.company === "" ) {
       setState(prev => ({...prev, isDisabled: true}))
     }
-    if(state.username && state.password && state.company ) {
-      setState(prev => ({...prev, isDisabled: false}))
-    }
+    // if(state.username && state.password && state.company ) {
+    //   setState(prev => ({...prev, isDisabled: false}))
+    // }
 
     
   }, [state.username, state.password, state.company])
