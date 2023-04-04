@@ -112,9 +112,7 @@ const HomePage = ({route}) => {
           <Box style={styles.cardBox} borderColor={bgCardBorderColor} bg={bgCard} >
               <HStack justifyContent="flex-start" space={3} alignItems="center" bg={bgCardBorderColor}  p={"10px"}>
                   <MaterialIcons name="message-reply-text" size={18} color={'white'} />
-                 <Text
-                  color={colorMode === 'dark' ? "primary.100" : 'white'}
-                 >New Push Notification</Text>
+                 <Text>New Push Notification</Text>
               </HStack>
               <Box >
                 <MessageBox message={value?.notification?.title} title={'Title:'}/>
@@ -123,11 +121,6 @@ const HomePage = ({route}) => {
                 <Divider my={2} />
                 <MessageBox message={value?.data?.inAppMessage} title={'Data:'}/>
               </Box>
-           
-            {/* <Box bg={"primary.400"} w="25%" style={styles.timeStamp} >
-              <AntDesign name="clockcircleo" />
-              <Text>{value && converTime(value?.sentTime) }</Text>
-            </Box> */}
           <Box>
           </Box>
         </Box>
@@ -143,7 +136,7 @@ const MessageBox = ({message, title}) => {
   return (
     <Box w="100%" p="10px" >
       <Text fontSize="md" >{title}</Text>
-      <Box w={'20px'} mb={'5px'} mt={'2px'} h={'3px'} bg={colorMode === 'dark' ? 'primary.400' : 'primary.400'}></Box>
+      <Box w={'14px'} mb={'5px'} mt={'2px'} h={'2px'} bg={colorMode === 'dark' ? 'primary.400' : 'primary.400'}></Box>
       <Box w="100%"  bg={'warmGrey.100'}>
         <Text>
           {message}
