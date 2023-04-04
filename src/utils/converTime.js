@@ -4,8 +4,7 @@ const greeceTimezone = 'Europe/Athens';
 
 const converTime = (timeStamp) => {
   const timestamp = timeStamp; // Timestamp in milliseconds
-  console.log(timestamp)
-  console.log(new Date(timestamp))
+
   const a = new Date(timeStamp)
   // Convert the timestamp to the equivalent time in the Greece timezone
   // const greeceTime = utcToZonedTime(new Date(timestamp), greeceTimezone);

@@ -58,8 +58,7 @@ const LoginScreen = () => {
       company: state.company
     }
     ).then((response) => {
-      console.log(response.data)
-      console.log(response)
+ 
       if(response.data.status == 'OK') {
       
         setState(prev => ({...prev, isLoading: false}))
@@ -74,9 +73,7 @@ const LoginScreen = () => {
         setIsClose(false)
       }
     }).catch((error) => {
-      
         setState(prev => ({...prev, isLoading: false}))
-      console.log(error)
     });
 
 

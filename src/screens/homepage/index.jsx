@@ -5,12 +5,12 @@ import messaging from '@react-native-firebase/messaging';
 import baseURL from '../../config/config';
 import useAsyncStorage from '../../utils/storeAsync';
 //NATIVE BASSE
-import { Box, Text, Input, useColorModeValue, colorMode, } from 'native-base';
+import { Box, Text, Input, useColorModeValue, colorMode, HStack, Icon, Divider,  } from 'native-base';
 import converTime from '../../utils/converTime';
 import AntDesign from  'react-native-vector-icons/AntDesign'
+import MaterialIcons from  'react-native-vector-icons/MaterialCommunityIcons'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 
 
@@ -29,8 +29,6 @@ const HomePage = ({route}) => {
     }
   }
 
-  const [message, setMessage ] = useState('')
-  // const bg = useColorModeValue("warmGray.50", "coolGray.800");
   const bg = useColorModeValue("warmGray.100", "coolGray.800");
   const bgCard = useColorModeValue("white", "primary.600");
   const bgCardBorderColor =  useColorModeValue("primary.500", "primary.300");
@@ -40,15 +38,12 @@ const HomePage = ({route}) => {
  
 
   const registerToken = async (token) => {
-    // console.log("TOKEN " + token)
-    let userid = getData('@userID')
-    console.log(userid)
+    let userid = await getData('@userID')
    
     await axios.post(`${baseURL}/notifyRegisterToken.php`, {
       userid:  userid ,
       token: token
     }).then((response) => {
-      
     });
   }
   
@@ -58,7 +53,6 @@ const HomePage = ({route}) => {
     // Register the device with FCM
     await messaging().registerDeviceForRemoteMessages();
     const token = await messaging().getToken();
-    // console.log(token)
     registerToken(token)
   }
 
@@ -115,14 +109,25 @@ const HomePage = ({route}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Box p="10px" bg={bg} flex={1}>
-          <Box style={styles.cardBox} borderColor={bgCardBorderColor} bg={bgCard}  >
-          <MessageBox message={value?.notification?.title} title={'Title:'}/>
-          <MessageBox message={value?.notification?.body} title={'Body:'}/>
-          <MessageBox message={value?.data?.inAppMessage} title={'Data:'}/>
-          <Box bg={"primary.400"} w="25%" style={styles.timeStamp} >
-            <AntDesign name="clockcircleo" />
-            {/* <Text>{value && converTime(value?.sentTime) }</Text> */}
-          </Box>
+          <Box style={styles.cardBox} borderColor={bgCardBorderColor} bg={bgCard} >
+              <HStack justifyContent="flex-start" space={3} alignItems="center" bg={bgCardBorderColor}  p={"10px"}>
+                  <MaterialIcons name="message-reply-text" size={18} color={'white'} />
+                 <Text
+                  color={colorMode === 'dark' ? "primary.100" : 'white'}
+                 >New Push Notification</Text>
+              </HStack>
+              <Box >
+                <MessageBox message={value?.notification?.title} title={'Title:'}/>
+                <Divider my={2} />
+                <MessageBox message={value?.notification?.body} title={'Body:'}/>
+                <Divider my={2} />
+                <MessageBox message={value?.data?.inAppMessage} title={'Data:'}/>
+              </Box>
+           
+            {/* <Box bg={"primary.400"} w="25%" style={styles.timeStamp} >
+              <AntDesign name="clockcircleo" />
+              <Text>{value && converTime(value?.sentTime) }</Text>
+            </Box> */}
           <Box>
           </Box>
         </Box>
@@ -136,8 +141,8 @@ const HomePage = ({route}) => {
 
 const MessageBox = ({message, title}) => {
   return (
-    <Box w="100%">
-      <Text mt="10px" fontSize={'lg'}> {title}</Text>
+    <Box w="100%" p="10px" >
+      <Text fontSize="md" >{title}</Text>
       <Box w={'20px'} mb={'5px'} mt={'2px'} h={'3px'} bg={colorMode === 'dark' ? 'primary.400' : 'primary.400'}></Box>
       <Box w="100%"  bg={'warmGrey.100'}>
         <Text>
@@ -151,7 +156,7 @@ const MessageBox = ({message, title}) => {
 const styles = StyleSheet.create({
   cardBox: {
     borderWidth: 1,
-    padding: 10,
+    // padding: 10,
     borderRadius: 4,
   },
   timeStamp: {  

@@ -9,7 +9,6 @@ const useAsyncStorage = (key, initialValue) => {
       try {
         const storedValue = await AsyncStorage.getItem(key);
         if (storedValue !== null) {
-          console.log('value' + JSON.stringify(value))
           setValue(JSON.parse(storedValue));
         }
       } catch (error) {
