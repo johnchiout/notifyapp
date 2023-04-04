@@ -5,7 +5,7 @@ import messaging from '@react-native-firebase/messaging';
 import baseURL from '../../config/config';
 import useAsyncStorage from '../../utils/storeAsync';
 //NATIVE BASSE
-import { Box, Text, Input, useColorModeValue, colorMode, HStack, Icon, Divider,  } from 'native-base';
+import { Box, Text, Input, useColorModeValue, colorMode, HStack, Icon, Divider, Center } from 'native-base';
 import converTime from '../../utils/converTime';
 import AntDesign from  'react-native-vector-icons/AntDesign'
 import MaterialIcons from  'react-native-vector-icons/MaterialCommunityIcons'
@@ -15,9 +15,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-
 const HomePage = ({route}) => {
   // const { userid } = route.params;
+  
+const bg = useColorModeValue("warmGray.100", "coolGray.800");
+let bgCard = useColorModeValue("white", "primary.600");
+let bgCardBorderColor =  useColorModeValue("primary.500", "primary.300");
+
+  const [value, saveData, clearData] = useAsyncStorage('@message', null);
+
   const getData = async (key) => {
     try {
       const value = await AsyncStorage.getItem(key)
@@ -29,10 +35,6 @@ const HomePage = ({route}) => {
     }
   }
 
-  const bg = useColorModeValue("warmGray.100", "coolGray.800");
-  const bgCard = useColorModeValue("white", "primary.600");
-  const bgCardBorderColor =  useColorModeValue("primary.500", "primary.300");
-  const [value, saveData, clearData] = useAsyncStorage('@message', 'initial value');
 
 
  
@@ -62,7 +64,6 @@ const HomePage = ({route}) => {
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('Message handled in the background!', remoteMessage);
       if(remoteMessage) {
-        setMessage(remoteMessage)
         saveData(remoteMessage)
       }
       
@@ -70,7 +71,6 @@ const HomePage = ({route}) => {
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
     messaging().onNotificationOpenedApp(remoteMessage => {
       if(remoteMessage) {
-        setMessage(remoteMessage)
         saveData(remoteMessage)
       }
       // console.log('Notification caused app to open from background state:',remoteMessage.notification);
@@ -82,12 +82,8 @@ const HomePage = ({route}) => {
       .then(remoteMessage => {
       
         if (remoteMessage) {
-          saveData(remoteMessage)
           setMessage(remoteMessage)
-          // console.log(
-          //   'Notification caused app to open from quit state:',
-          //   remoteMessage.notification,
-          // );
+         
         }
       });
       onAppBootstrap()
@@ -96,7 +92,6 @@ const HomePage = ({route}) => {
         // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
         if(remoteMessage) {
           saveData(remoteMessage)
-          setMessage(remoteMessage)
         }
       
       });
@@ -109,21 +104,15 @@ const HomePage = ({route}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Box p="10px" bg={bg} flex={1}>
-          <Box style={styles.cardBox} borderColor={bgCardBorderColor} bg={bgCard} >
-              <HStack justifyContent="flex-start" space={3} alignItems="center" bg={bgCardBorderColor}  p={"10px"}>
-                  <MaterialIcons name="message-reply-text" size={18} color={'white'} />
-                 <Text>New Push Notification</Text>
-              </HStack>
-              <Box >
-                <MessageBox message={value?.notification?.title} title={'Title:'}/>
-                <Divider my={2} />
-                <MessageBox message={value?.notification?.body} title={'Body:'}/>
-                <Divider my={2} />
-                <MessageBox message={value?.data?.inAppMessage} title={'Data:'}/>
-              </Box>
-          <Box>
-          </Box>
-        </Box>
+        {console.log(value)}
+        {value ? (
+          <MessageBox value={value} />
+        ): (
+          <Center>
+              <Text>No push notifications</Text>
+          </Center>
+        
+        )}
       </Box>
     
     </SafeAreaView>
@@ -132,7 +121,32 @@ const HomePage = ({route}) => {
 
 
 
-const MessageBox = ({message, title}) => {
+
+
+const MessageBox = ({value}) => {
+  let bgCard = useColorModeValue("white", "primary.600");
+  let bgCardBorderColor =  useColorModeValue("primary.500", "primary.300");
+  return (
+    <Box style={styles.cardBox} borderColor={bgCardBorderColor} bg={bgCard} >
+      <HStack justifyContent="flex-start" space={3} alignItems="center" bg={bgCardBorderColor} p={"10px"}>
+        <MaterialIcons name="message-reply-text" size={18} color={'white'} />
+        <Text>New Push Notification</Text>
+      </HStack>
+      <Box >
+        <MessageRow message={value?.notification?.title} title={'Title:'} />
+        <Divider my={2} />
+        <MessageRow message={value?.notification?.body} title={'Body:'} />
+        <Divider my={2} />
+        <MessageRow message={value?.data?.inAppMessage} title={'Data:'} />
+      </Box>
+      <Box>
+      </Box>
+    </Box>
+  )
+}
+
+
+const MessageRow = ({message, title}) => {
   return (
     <Box w="100%" p="10px" >
       <Text fontSize="md" >{title}</Text>
