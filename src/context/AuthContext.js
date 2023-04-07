@@ -1,6 +1,7 @@
 
 import React, {useState, createContext} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const AuthContext = createContext();
 
 
@@ -8,38 +9,46 @@ export const AuthLayout = ({children}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLogged , setIsLogged] = useState(false);
 
-  const authContext = React.useMemo(() => {
+
+
+  const authActions = React.useMemo(() => {
     return {
       signIn: () => {
         console.log('sign in')
         setIsLoading(false);
         setIsLogged(true);
+        asyncStoreContext.save('@isLogged', JSON.stringify(true))
       },
-      signUp: () => {
-        setIsLoading(false);
-      },
+      
       signOut: () => {
         console.log('sign out')
         setIsLoading(false);
         setIsLogged(false);
+        asyncStoreContext.save('@isLogged', JSON.stringify(false))
+      }, 
+      initialize: async () => {
+        console.log('initialize')
+        setIsLoading(true)
+        let item = await asyncStoreContext.get('@isLogged');
+        setIsLogged(JSON.parse(item))
       }
+
     };
     
   }, []);
 
   const asyncStoreContext = React.useMemo(() => {
     return {
-      save: async ({storage_key, value}) => {
+      save: async (storage_key, value) => {
         try {
-          await AsyncStorage.setItem(storage_key, value)
+          return await AsyncStorage.setItem(storage_key, value)
         } catch (e) {
           console.log(e)
         }
       },
-      get: async ({storage_key, value}) => {
+      get: async (storage_key) => {
         try {
-          const jsonValue = JSON.stringify(value)
-          await AsyncStorage.setItem(storage_key, jsonValue)
+          return await AsyncStorage.getItem(storage_key)
         } catch (e) {
           console.log(e)
         }
@@ -59,7 +68,7 @@ export const AuthLayout = ({children}) => {
   // }
 
   return (
-    <AuthContext.Provider value={{isLogged, setIsLogged, authContext}}>
+    <AuthContext.Provider value={{isLogged, setIsLogged, authActions}}>
         {children}
     </AuthContext.Provider>
   );

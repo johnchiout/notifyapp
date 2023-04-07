@@ -5,9 +5,8 @@ import messaging from '@react-native-firebase/messaging';
 import baseURL from '../../config/config';
 import useAsyncStorage from '../../utils/storeAsync';
 //NATIVE BASSE
-import { Box, Text, Input, useColorModeValue, colorMode, HStack, Icon, Divider, Center } from 'native-base';
-import converTime from '../../utils/converTime';
-import AntDesign from  'react-native-vector-icons/AntDesign'
+import { Box, Text, Input, useColorModeValue, useColorMode, HStack, Icon, Divider, Center } from 'native-base';
+
 import MaterialIcons from  'react-native-vector-icons/MaterialCommunityIcons'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,6 +20,7 @@ const HomePage = ({route}) => {
 const bg = useColorModeValue("warmGray.100", "coolGray.800");
 let bgCard = useColorModeValue("white", "primary.600");
 let bgCardBorderColor =  useColorModeValue("primary.500", "primary.300");
+
 
   const [value, saveData, clearData] = useAsyncStorage('@message', null);
 
@@ -126,6 +126,7 @@ let bgCardBorderColor =  useColorModeValue("primary.500", "primary.300");
 const MessageBox = ({value}) => {
   let bgCard = useColorModeValue("white", "primary.600");
   let bgCardBorderColor =  useColorModeValue("primary.500", "primary.300");
+ 
   return (
     <Box style={styles.cardBox} borderColor={bgCardBorderColor} bg={bgCard} >
       <HStack justifyContent="flex-start" space={3} alignItems="center" bg={bgCardBorderColor} p={"10px"}>
@@ -147,10 +148,13 @@ const MessageBox = ({value}) => {
 
 
 const MessageRow = ({message, title}) => {
+  const {
+    colorMode,
+  } = useColorMode();
   return (
     <Box w="100%" p="10px" >
       <Text fontSize="md" >{title}</Text>
-      <Box w={'14px'} mb={'5px'} mt={'2px'} h={'2px'} bg={colorMode === 'dark' ? 'primary.400' : 'primary.400'}></Box>
+      <Box w={'14px'} mb={'5px'} mt={'2px'} h={'2px'} bg={colorMode === 'dark' ? 'primary.400' : 'primary.600'}></Box>
       <Box w="100%"  bg={'warmGrey.100'}>
         <Text>
           {message}

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { InputRow, InputBase, BoxLayout, InputPassword, CustomAlert, InputControl } from '../../components/index';
+import {  InputBase, BoxLayout, CustomAlert} from '../../components/index';
 import axios from 'axios';
 import baseURL from '../../config/config';
-import { useNavigation } from '@react-navigation/native';
-import { Button, useColorMode, useColorModeValue, Box, Text, Container, VStack, Toast} from "native-base";
+import { Button} from "native-base";
 import useAsyncStorage from '../../utils/storeAsync';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../../context/AuthContext';
+
+
+
 const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value)
@@ -20,8 +22,7 @@ const storeData = async (key, value) => {
 
 
 const LoginScreen = () => {
-  const {authContext} = React.useContext(AuthContext);
-  const [value, saveData, clearMyData] = useAsyncStorage('@isLogged', 'initial value');
+  const {authActions} = React.useContext(AuthContext);
 
   const [state, setState] = useState({
     username: 'giannis',
@@ -40,9 +41,7 @@ const LoginScreen = () => {
     if(state.username === "" && state.password === ""  && state.company === "" ) {
       setState(prev => ({...prev, isDisabled: true}))
     }
-    // if(state.username && state.password && state.company ) {
-    //   setState(prev => ({...prev, isDisabled: false}))
-    // }
+   
 
     
   }, [state.username, state.password, state.company])
@@ -61,8 +60,8 @@ const LoginScreen = () => {
       if(response.data.status == 'OK') {
       
         setState(prev => ({...prev, isLoading: false}))
-        authContext.signIn();
-        storeData('@isLogged', JSON.stringify(true))
+        authActions.signIn();
+        // storeData('@isLogged', JSON.stringify(true))
         storeData('@userID', JSON.stringify(response.data.res.userid))
           
       }

@@ -1,18 +1,13 @@
 import 'react-native-gesture-handler';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, AppRegistry} from "react-native";
-import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { NativeBaseProvider, Box, useColorMode, useColorModeValue } from "native-base";
-import {StackNav} from './src/nav/stack';
-import { AuthStack, MainStack } from './src/nav/stack';
-import useAsyncStorage from './src/utils/storeAsync';
+import { NativeBaseProvider } from "native-base";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen'
-import { MainNavigator } from './src/nav/stack';
-import { FinalStackNavigator } from './src/nav/stack';
 import RootStackScreen from './src/nav/stack';
 import { AuthLayout } from './src/context/AuthContext';
+// import { colorModeManager } from './src/utils/colorManager';
+
 
 const colorModeManager = {
   get: async () => {
@@ -33,13 +28,11 @@ const colorModeManager = {
 };
 
 
-
 function HeadlessCheck({isHeadless}) {
   if (isHeadless) {
     // App has been launched in the background by iOS, ignore
     return null;
   }
-  use
   return <App />;
 }
 
@@ -72,8 +65,6 @@ function App() {
     <AuthLayout>
        <NativeBaseProvider colorModeManager={colorModeManager}>
       <SafeAreaView style={{flex: 1}}>
-          {/* {!islogged  ? <StackNav /> : <MainStack />} */}
-          {/* <  FinalStackNavigator /> */}
           <RootStackScreen />
       </SafeAreaView>
     </NativeBaseProvider>
