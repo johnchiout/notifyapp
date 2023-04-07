@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SplashScreen from 'react-native-splash-screen'
 import RootStackScreen from './src/nav/stack';
 import { AuthLayout } from './src/context/AuthContext';
+import { UserLayout } from './src/context/userContext';
 // import { colorModeManager } from './src/utils/colorManager';
 
 
@@ -63,11 +64,13 @@ function App() {
 
   return (
     <AuthLayout>
-       <NativeBaseProvider colorModeManager={colorModeManager}>
-      <SafeAreaView style={{flex: 1}}>
-          <RootStackScreen />
-      </SafeAreaView>
-    </NativeBaseProvider>
+      <UserLayout>
+        <NativeBaseProvider colorModeManager={colorModeManager}>
+          <SafeAreaView style={{ flex: 1 }}>
+            <RootStackScreen />
+          </SafeAreaView>
+        </NativeBaseProvider>
+      </UserLayout>
     </AuthLayout>
    
     

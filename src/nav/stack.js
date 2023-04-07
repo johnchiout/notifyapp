@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import {Box, useColorMode, useColorModeValue, colorMode, useTheme} from 'native-base';
+import {Box, useColorMode, useColorModeValue, colorMode, useTheme, Switch, HStack} from 'native-base';
 
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
@@ -102,7 +102,11 @@ const CustomDrawerContent = (props) => {
       <DrawerItem
         label="Color Mode"
         onPress={ onPressColorMode }
+       
       />
+      <HStack>
+        
+      </HStack>
     </Box>
   )
 }
