@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Button, useColorMode, useColorModeValue, Box, Text, Container, VStack, Toast} from "native-base";
 import useAsyncStorage from '../../utils/storeAsync';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { AuthContext } from '../../context/AuthContext';
 const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value)
@@ -20,7 +20,7 @@ const storeData = async (key, value) => {
 
 
 const LoginScreen = () => {
-  
+  const {authContext} = React.useContext(AuthContext);
   const [value, saveData, clearMyData] = useAsyncStorage('@isLogged', 'initial value');
 
   const [state, setState] = useState({
@@ -32,7 +32,6 @@ const LoginScreen = () => {
   })
 
   const [isClose, setIsClose] = useState(true)
-  const navigation = useNavigation();
   const handleUsername = text =>setState(prev => ({...prev, username: text}))
   const handlePassword = text =>setState(prev => ({...prev, password: text}))
   const handleCompany = text =>setState(prev => ({...prev, company: text}))
@@ -62,9 +61,9 @@ const LoginScreen = () => {
       if(response.data.status == 'OK') {
       
         setState(prev => ({...prev, isLoading: false}))
+        authContext.signIn();
         storeData('@isLogged', JSON.stringify(true))
         storeData('@userID', JSON.stringify(response.data.res.userid))
-        navigation.navigate('HomePage', {userid: response.data.res.userid })
           
       }
       if(response.data.status == 'NOT OK') {
@@ -110,14 +109,9 @@ const LoginScreen = () => {
           >
             Login
           </Button>
-       
-        {/* <Button w="100%" onPress={toggleColorMode}  fontSize="lg">
-            Toggle
-        </Button>
-        <Text>Color</Text> */}
+    
       </BoxLayout>
       
-      // </Box>
   );
 };
 
